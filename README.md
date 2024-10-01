@@ -1,5 +1,5 @@
-#MOST ACTIONS WERE CARRIED OUT THROUGH CI/CD GITLAB
-1. Creating a simple application
+# MOST ACTIONS WERE CARRIED OUT THROUGH CI/CD GITLAB
+## 1. Creating a simple application
 
 ●      Use Python programming language to create a simple [web application with MySQL database](https://github.com/Visemir/step4-kuber/tree/main/src)
 
@@ -7,7 +7,7 @@
 
 .
 
-2. Setting up a Kubernetes Cluster
+## 2. Setting up a Kubernetes Cluster
 
 ●      MiniKube:
 
@@ -19,19 +19,19 @@
 
 ○      [Create YAML files to define your application's deployment, service, and other resources.](https://github.com/Visemir/step4-kuber/tree/main/cluster)
 
-3. Deploying the Application
+## 3. Deploying the Application
 
 ●      Use kubectl to apply your YAML files to the Kubernetes cluster.
 
 ●      Check the status of your deployment and service using kubectl get pods and kubectl get services.
 
-4. Integrating with GitLab
+## 4. Integrating with GitLab
 
 ●      Configure GitLab CI/CD to automatically build, test, and deploy your application to Kubernetes.
 
 ●      Create a GitLab CI/CD pipeline using a [.gitlab-ci.yml file.](https://github.com/Visemir/step4-kuber/blob/main/.gitlab-ci.yml)
 
-5. [Persistent Volumes](https://github.com/Visemir/step4-kuber/blob/main/cluster/add-volumes.yaml)
+## 5. [Persistent Volumes](https://github.com/Visemir/step4-kuber/blob/main/cluster/add-volumes.yaml)
 
 ●      Create a persistent volume claim (PVC) to request storage for your application.
 
