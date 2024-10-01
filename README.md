@@ -39,6 +39,8 @@
 
 ●      Mount the PV to your application's pod.
 
+![](https://github.com/Visemir/step4-kuber/blob/main/image/kuber.jpg)
+
 ![](https://github.com/Visemir/step4-kuber/blob/main/image/cluster.jpg)
 
 ![](https://github.com/Visemir/step4-kuber/blob/main/image/build.jpg)
