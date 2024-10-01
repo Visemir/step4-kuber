@@ -1,0 +1,78 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  TAG_NAME: v5.0
+  MYSQL_IMAGE: mysql:latest  
+  MYSQL_ROOT_PASSWORD: qwewewqwqw
+  MYSQL_USER: petshop
+  MYSQL_PASSWORD: 12345qazwsxed  
+  MYSQL_DATABASE: shop  
+  IMAGE_NAME: $IMAGE_NAME:$TAG_NAME
+  
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
+
+
+
+build:
+  stage: build
+  script:
+    - echo "$CI_REGISTRY"
+    - echo "$CI_REGISTRY_USER"
+    - echo "$CI_REGISTRY_PASSWORD"
+    - echo "Building Docker image for application"
+    - docker build -t $IMAGE_NAME src/
+
+test:
+  stage: test
+  
+  script:
+    - docker network create test_network
+    - echo "Starting MySQL container"
+    - docker run -d --name mysql-server  --network test_network -e MYSQL_USER=$MYSQL_USER -e MYSQL_PASSWORD=$MYSQL_PASSWORD  -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=$MYSQL_DATABASE $MYSQL_IMAGE
+    - echo "Waiting for MySQL to be ready"
+    - sleep 15
+    - echo "Starting application container"
+    - docker run -d --name app  --network test_network  $IMAGE_NAME
+    - sleep 5
+    - echo "Showing application logs"
+    - docker logs app
+    - echo "Running tests"
+    - docker exec  app python3 -m unittest discover -s tests -v
+    
+
+  after_script:
+    - echo "Stopping and removing containers"
+    - docker stop app mysql-server
+    - docker rm app mysql-server
+    - docker network rm test_network
+
+push_image:
+  stage: push
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker push $IMAGE_NAME
+    - echo "Образ завантажено в репозиторій"  
+    - docker system prune -af
+
+
+
+deploy:
+  stage: deploy
+ 
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context root/step-kuber:my-cluster-test
+    - kubectl get secret regcred --namespace=servershop || kubectl create secret docker-registry regcred2     --docker-server=$CI_REGISTRY     --docker-username=$CI_REGISTRY_USER     --docker-password=$PASS_TOKEN     --docker-email=$GITLAB_USER_EMAIL --namespace=servershop  
+    - sed -i "s#<IMAGE>#${IMAGE_NAME}#g" cluster/deploy-app.yaml
+    - kubectl apply -f cluster/
+    - kubectl get pods -n servershop
+    - kubectl get svc -n servershop
