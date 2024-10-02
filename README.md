@@ -1,4 +1,4 @@
-# MOST ACTIONS WERE CARRIED OUT THROUGH CI/CD GITLAB
+
 ## 1. Creating a simple application
 
 ●      Use Python programming language to create a simple [web application with MySQL database](https://github.com/Visemir/step4-kuber/tree/main/src)
